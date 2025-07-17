@@ -89,7 +89,7 @@ void TLadderEntity::Draw() const {
 
     NGame::TApp::Instance()->RenderManager().SetLayer(NGame::TRenderManager::Light);
     auto light = NGame::TApp::Instance()->SpriteManager().Get("Sprites/Light.txt");
-    NGame::TApp::Instance()->SpriteManager().Draw(light, 0, Position() - (light->Frames[0].Size * 1 / 2), {1, 1});
+    NGame::TApp::Instance()->SpriteManager().Draw(light, 1, Position() - (light->Frames[1].Size * 2 / 2) + Size() / 2, {2, 2});
 }
 
 TExplosionEntity::TExplosionEntity(NGame::TEntity::TId id)
