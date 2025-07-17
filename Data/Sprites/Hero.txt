@@ -1,7 +1,0 @@
-Texture Texture/Main.bmp
-Frame 0 80 16 16 Stand
-Frame 16 80 16 16 Hold
-Frame 32 80 16 16 Jump
-Frame 48 80 16 16 Run
-Frame 64 80 16 16 Dead
-Frame 32 96 16 16 Climb

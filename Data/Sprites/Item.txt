@@ -1,7 +1,0 @@
-Texture Texture/Main.bmp
-Frame 0 64 16 16 Time
-Frame 16 64 16 16 Bullet
-Frame 32 64 16 16 Torch
-Frame 48 64 16 16 Key
-Frame 80 16 16 16 Rope
-Frame 16 96 16 16 Rock

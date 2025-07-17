@@ -1,3 +1,0 @@
-Texture Texture/Main.bmp
-Frame 96 32 16 16
-

@@ -1,5 +1,0 @@
-Texture Texture/Main.bmp
-Frame 64 48 16 16 Up
-Frame 80 48 16 16 Left
-Frame 64 64 16 16 Down
-Frame 80 64 16 16 Right
