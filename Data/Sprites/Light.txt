@@ -1,0 +1,2 @@
+Texture Texture/Main.bmp
+Frame 80 80 48 48

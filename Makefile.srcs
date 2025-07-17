@@ -1,0 +1,19 @@
+# Source files
+
+SRCS = \
+    src/Alarm.cpp \
+    src/App.cpp \
+    src/Common.cpp \
+    src/Entity.cpp \
+    src/EntityManager.cpp \
+    src/FileManager.cpp \
+    src/Gridmap.cpp \
+    src/Main.cpp \
+    src/RenderManager.cpp \
+    src/SpriteManager.cpp \
+    src/State.cpp \
+    src/SurfaceManager.cpp \
+    src/FontManager.cpp \
+    src/DigitManager.cpp \
+    src/RoomEntity.cpp \
+    src/Variable.cpp

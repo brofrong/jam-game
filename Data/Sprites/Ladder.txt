@@ -1,0 +1,3 @@
+Texture Texture/Main.bmp
+Frame 64 16 16 16 Ladder
+Frame 80 16 16 16 Rope

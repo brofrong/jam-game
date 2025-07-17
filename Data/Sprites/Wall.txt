@@ -1,0 +1,4 @@
+Texture Texture/Main.bmp
+Frame 0 16 16 16 Backdrop
+Frame 16 16 16 16 Dirt
+Frame 32 16 16 16 Grass

@@ -1,0 +1,3 @@
+Texture Texture/Main.bmp
+Frame 0 32 16 16 Clean
+Frame 16 32 16 16 Bloody
