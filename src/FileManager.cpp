@@ -18,18 +18,31 @@ std::string TFileManager::Get(const std::string& path) {
         return Cache_.Get(path);
     }
 
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: FileManager::Get(%s)\n", path.c_str());
+    #endif
+
     auto getAttempt = FromFilesystem(path);
     if (getAttempt.second) {
+        #ifdef __EMSCRIPTEN__
+        printf("Emscripten: Found file %s in filesystem\n", path.c_str());
+        #endif
         Cache_.Set(path, getAttempt.first);
         return getAttempt.first;
     }
 
     getAttempt = FromArchive(path);
     if (getAttempt.second) {
+        #ifdef __EMSCRIPTEN__
+        printf("Emscripten: Found file %s in archive\n", path.c_str());
+        #endif
         Cache_.Set(path, getAttempt.first);
         return getAttempt.first;
     }
 
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: Failed to find file %s\n", path.c_str());
+    #endif
     throw std::runtime_error("can't find file " + path);
 }
 
@@ -47,17 +60,35 @@ std::pair<std::string, bool> TFileManager::FromFilesystem(const std::string& pat
 }
 
 std::pair<std::string, bool> TFileManager::FromArchive(const std::string& path) {
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: Trying to open archive: %s\n", ArchivePath_.c_str());
+    #endif
+    
     std::ifstream archiveStream(ArchivePath_, std::ios::in | std::ios::binary);
     if (!archiveStream.is_open()) {
+        #ifdef __EMSCRIPTEN__
+        printf("Emscripten: Failed to open archive: %s\n", ArchivePath_.c_str());
+        #endif
         return std::make_pair<std::string, bool>({}, false);
     }
+    
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: Successfully opened archive: %s\n", ArchivePath_.c_str());
+    #endif
     
     // Identify and validate PAK file
     char identifier[4];
     archiveStream.read(identifier, 4);
     if (std::memcmp(identifier, "PACK", 4)) {
+        #ifdef __EMSCRIPTEN__
+        printf("Emscripten: Invalid PAK header, expected PACK, got %.4s\n", identifier);
+        #endif
         return std::make_pair<std::string, bool>({}, false);
     }
+    
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: Valid PAK header found\n");
+    #endif
     
     std::uint32_t tocOffset = ReadInt32(archiveStream);
     std::uint32_t tocSize = ReadInt32(archiveStream) / 64;
@@ -80,6 +111,10 @@ std::pair<std::string, bool> TFileManager::FromArchive(const std::string& path) 
             continue;
         }
 
+        #ifdef __EMSCRIPTEN__
+        printf("Emscripten: Found file %s in archive at offset %u, size %u\n", path.c_str(), fileOffset, fileSize);
+        #endif
+
         archiveStream.seekg(fileOffset);
         std::string result(fileSize, 0);
         archiveStream.read(result.data(), result.size());
@@ -87,6 +122,9 @@ std::pair<std::string, bool> TFileManager::FromArchive(const std::string& path) 
         return std::make_pair(result, true);
     }
 
+    #ifdef __EMSCRIPTEN__
+    printf("Emscripten: File %s not found in archive\n", path.c_str());
+    #endif
     return std::make_pair<std::string, bool>({}, false);
 }
 

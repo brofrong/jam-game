@@ -887,6 +887,13 @@ void TBackgroundTiler::Draw() const {
     tileOffset.X %= 16;
     tileOffset.Y %= 16;
 
+    #ifdef __EMSCRIPTEN__
+    static int bgDrawCount = 0;
+    bgDrawCount++;
+    if (bgDrawCount % 60 == 0) {
+        printf("Emscripten: Drawing background tiles, camera: (%d, %d)\n", cameraPosition.X, cameraPosition.Y);
+    }
+    #endif
 
     renderManager.SetLayer(NGame::TRenderManager::Tile);
     for (int i = -1; i <= 320 / 16; ++i) {
