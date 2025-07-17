@@ -134,14 +134,6 @@ void TEntityManager::Update() {
 }
 
 void TEntityManager::Draw() {
-    #ifdef __EMSCRIPTEN__
-    static int drawCount = 0;
-    drawCount++;
-    if (drawCount % 60 == 0) {
-        printf("Emscripten: Drawing %zu entities\n", Entities_.size());
-    }
-    #endif
-    
     std::for_each(Entities_.begin(), Entities_.end(), [&](auto& pair) {
         auto& entity = pair.second;
         entity->Draw();

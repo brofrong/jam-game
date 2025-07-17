@@ -15,10 +15,6 @@ static NGame::TApp *app = nullptr;
 static void InitApp(void) {
     app = NGame::TApp::Instance();
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Registering entities...\n");
-    #endif
-
     app->EntityManager().RegisterEntity<THero>("Hero");
     app->EntityManager().RegisterEntity<TDirtEntity>("DirtEntity");
     app->EntityManager().RegisterEntity<TGrassEntity>("GrassEntity");
@@ -36,33 +32,19 @@ static void InitApp(void) {
     app->EntityManager().RegisterEntity<TBackgroundTiler>("BackgroundTiler");
     app->EntityManager().RegisterEntity<TRoomEntity>("RoomEntity");
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Creating initial entities...\n");
-    #endif
-
     app->EntityManager().MakeEntityByName("RoomEntity");
     app->EntityManager().MakeEntityByName("BackgroundTiler");
 
     auto h = app->EntityManager().MakeEntityByName("Hero");
     h->SetPosition({0, -64});
     app->EntityManager().UpdateCollision(h);
-
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Initial entities created\n");
-    #endif
 }
 
 static void MainLoop(void) {
     if (app) {
         app->Run();
     } else {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Initializing app...\n");
-        #endif
         InitApp();
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: App initialized\n");
-        #endif
     }
 }
 

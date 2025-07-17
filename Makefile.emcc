@@ -4,7 +4,7 @@
 CC = emcc
 CXX = emcc
 CXXFLAGS ?= -sUSE_SDL=2 -std=c++17 -Iinclude -fexceptions
-LDFLAGS ?= -sUSE_SDL=2 -fexceptions --embed-file=data.pak@data.pak -sMAX_WEBGL_VERSION=2 -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY=1
+LDFLAGS ?= -sUSE_SDL=2 -fexceptions --embed-file=data.pak@data.pak -sMAX_WEBGL_VERSION=2
 TARGET = eulamadness.html
 
 # System configuration

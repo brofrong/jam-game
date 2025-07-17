@@ -9,56 +9,27 @@ namespace NGame {
 
 TRenderManager::TRenderManager(TSurfaceManager& surfaceManager, int width, int height, const std::string& title, std::size_t cacheSize)
     : SurfaceManager_(surfaceManager), Cache_(cacheSize), Size_(width, height) {
-    
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Creating window with size %dx%d\n", width, height);
-    #endif
-    
     Window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, 
                                SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_RESIZABLE);
     if (!Window_) {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Failed to create window: %s\n", SDL_GetError());
-        #endif
         throw std::runtime_error("Can't create window");
     }
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Window created successfully\n");
-    #endif
-
     Renderer_ = SDL_CreateRenderer(Window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!Renderer_) {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Failed to create renderer: %s\n", SDL_GetError());
-        #endif
         SDL_DestroyWindow(Window_);
         throw std::runtime_error("Can't create renderer");
     }
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Renderer created successfully\n");
-    #endif
-
     ScreenTexture_ = SDL_CreateTexture(Renderer_, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, width, height);
     if (!ScreenTexture_) {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Failed to create screen texture: %s\n", SDL_GetError());
-        #endif
         SDL_DestroyRenderer(Renderer_);
         SDL_DestroyWindow(Window_);
         throw std::runtime_error("Can't create screen texture");
     }
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Screen texture created successfully\n");
-    #endif
-
     LightTexture_ = SDL_CreateTexture(Renderer_, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, width, height);
     if (!LightTexture_) {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Failed to create light texture: %s\n", SDL_GetError());
-        #endif
         SDL_DestroyTexture(ScreenTexture_);
         SDL_DestroyRenderer(Renderer_);
         SDL_DestroyWindow(Window_);
@@ -66,20 +37,12 @@ TRenderManager::TRenderManager(TSurfaceManager& surfaceManager, int width, int h
     }
     SDL_SetTextureBlendMode(LightTexture_, SDL_BLENDMODE_MOD);
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Light texture created successfully\n");
-    #endif
-
     // Make window bigger
     if (width < 640 && height < 480) {
         SDL_SetWindowSize(Window_, 640, 480);
     }
 
     Reset();
-    
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: RenderManager initialization complete\n");
-    #endif
 }
 
 std::shared_ptr<SDL_Texture> TRenderManager::Get(const std::string& path) {
@@ -87,22 +50,11 @@ std::shared_ptr<SDL_Texture> TRenderManager::Get(const std::string& path) {
         return Cache_.Get(path);
     }
 
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Loading texture: %s\n", path.c_str());
-    #endif
-
     std::shared_ptr<SDL_Surface> surface = SurfaceManager_.Get(path);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(Renderer_, surface.get());
     if (!texture) {
-        #ifdef __EMSCRIPTEN__
-        printf("Emscripten: Failed to create texture from surface %s: %s\n", path.c_str(), SDL_GetError());
-        #endif
         std::runtime_error("Can't create texture from surface " + path);
     }
-
-    #ifdef __EMSCRIPTEN__
-    printf("Emscripten: Successfully loaded texture: %s\n", path.c_str());
-    #endif
 
     std::shared_ptr<SDL_Texture> result(texture, [](SDL_Texture* texture) { SDL_DestroyTexture(texture); });
     Cache_.Set(path, result);
@@ -188,15 +140,6 @@ void TRenderManager::Run() {
     if (!IsRunning()) {
         return;
     }
-
-    #ifdef __EMSCRIPTEN__
-    static int frameCount = 0;
-    frameCount++;
-    if (frameCount % 60 == 0) {
-        printf("Emscripten: Frame %d, Commands: Tile=%zu, Background=%zu, Foreground=%zu\n", 
-               frameCount, Commands_[Tile].size(), Commands_[Background].size(), Commands_[Foreground].size());
-    }
-    #endif
 
     for (size_t layer = 0; layer < SentinelMax; ++layer) {
         switch (layer) {
@@ -387,11 +330,11 @@ void TRenderManager::Reset() {
     SDL_Rect a;
     SDL_RenderGetViewport(Renderer_, &a);
 
-    SDL_SetRenderDrawColor(Renderer_, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(Renderer_, 0, 0, 0, 0);
     SDL_SetRenderTarget(Renderer_, NULL);
     SDL_RenderClear(Renderer_);
 
-    SDL_SetRenderDrawColor(Renderer_, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(Renderer_, 0, 0, 0, 0);
     SDL_SetRenderTarget(Renderer_, ScreenTexture_);
     SDL_RenderClear(Renderer_);
 
